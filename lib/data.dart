@@ -1,7 +1,7 @@
 class NavigationItem {
 
   String title;
-  
+
   NavigationItem(this.title);
 
 }

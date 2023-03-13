@@ -1,30 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:job_finder/data.dart';
+import 'package:job_finder/jobs.dart';
+import 'package:job_finder/applications.dart';
 
-class Master extends StatefulWidget {
+class Master extends StatefulWidget{
   const Master({super.key});
 
   @override
-  State<Master> createState() => _MasterState();
+  State<Master> createState()=> _MasterState();
 }
 
-class _MasterState extends State<Master> {
-
+class _MasterState extends State<Master>{
   List<NavigationItem> navigationItems = getNavigationItemList();
   NavigationItem? selectedItem;
+  Widget? currentWidget;
 
   @override
   void initState(){
     super.initState();
     setState(() {
       selectedItem = navigationItems[0];
+      currentWidget = const Jobs();
     });
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     return Scaffold(
       backgroundColor: Colors.grey[200],
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        child: currentWidget,
+      ),
       bottomNavigationBar: Container(
         height: 80,
         decoration: const BoxDecoration(
@@ -41,22 +48,24 @@ class _MasterState extends State<Master> {
       ),
     );
   }
-
   List<Widget> buildNavigationItems(){
     List<Widget> list = [];
-    for (var i = 0; i < navigationItems.length; i++) {
+    for (int i = 0; i < navigationItems.length; i++) {
       list.add(buildNavigationItem(navigationItems[i]));
     }
     return list;
   }
-
   Widget buildNavigationItem(NavigationItem item){
     return GestureDetector(
       onTap: (){
         setState(() {
+          switch(item.title){
+            case 'Jobs' : currentWidget = const Jobs(); break;
+            case 'Applications' : currentWidget = const Applications(); break;
+          }
           selectedItem = item;
-          // print(selectedItem!.title = item.title);
         });
+        print(selectedItem!.title);
       },
       child: AnimatedOpacity(
         duration: const Duration(milliseconds: 300),
@@ -71,21 +80,15 @@ class _MasterState extends State<Master> {
                 fontWeight: FontWeight.bold
               ),
             ),
-            selectedItem!.title == item.title
-            ? Column(
-              children: [
-                const SizedBox(
-                  height: 4,
+            selectedItem == item
+            ? Container(
+                margin: const EdgeInsets.only(top: 4),
+                width: 8,
+                height: 8,
+                decoration: const BoxDecoration(
+                  color: Colors.black,
+                  shape: BoxShape.circle
                 ),
-                Container(
-                  width: 8,
-                  height: 8,
-                  decoration: const BoxDecoration(
-                    color: Colors.black,
-                    shape: BoxShape.circle
-                  ),
-                )
-              ],
             )
             : Container()
           ],
