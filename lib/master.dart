@@ -65,7 +65,6 @@ class _MasterState extends State<Master>{
           }
           selectedItem = item;
         });
-        print(selectedItem!.title);
       },
       child: AnimatedOpacity(
         duration: const Duration(milliseconds: 300),
